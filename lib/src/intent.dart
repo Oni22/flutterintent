@@ -9,8 +9,7 @@ class FlutterIntent {
   BuildContext context;
   String name;
   dynamic _object;
-  Result _result;
-  int _requestCode = -1;
+  Result result;
 
   FlutterIntent({
     @required this.context,
@@ -18,7 +17,7 @@ class FlutterIntent {
   });
 
   FlutterIntent.withNoContext({this.name});
-  FlutterIntent.onResult({this.context});
+  FlutterIntent.setResult({this.context,this.result});
 
   void putExtra(String key, dynamic value) {
     _extras[key] = value;
@@ -74,16 +73,18 @@ class FlutterIntent {
     return _extras.isNotEmpty || _object != null;
   }
 
-  Future<void> startForResult(String name,int requestCode, Function(Result result,FlutterIntent intent) onResult) async {
-    var result = await Navigator.of(context).pushNamed(name,arguments: this);
-    if(result is FlutterIntent) {
-      onResult(result._result,result);
+  Future<void> startForResult(Function(Result result,FlutterIntent intent) onResult) async {
+    var intentData = await Navigator.of(context).pushNamed(name,arguments: this);
+    if(intentData is FlutterIntent) {
+      onResult(result,intentData);
     }
   }
 
-  void setResultAndFinish(Result result) {
-    _result = result;
-    Navigator.of(context).pop(this);
+  void finish() {
+    if(result != null)
+      Navigator.of(context).pop(this);
+    else 
+      Navigator.of(context).pop();
   }
 
   /// Force overlay the bottom navigation bar
