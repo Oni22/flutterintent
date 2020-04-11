@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutterintent/src/results.dart';
 
 class FlutterIntent {
 
@@ -8,6 +9,8 @@ class FlutterIntent {
   BuildContext context;
   String name;
   dynamic _object;
+  Result _result;
+  int _requestCode = -1;
 
   FlutterIntent({
     @required this.context,
@@ -15,6 +18,7 @@ class FlutterIntent {
   });
 
   FlutterIntent.withNoContext({this.name});
+  FlutterIntent.onResult({this.context});
 
   void putExtra(String key, dynamic value) {
     _extras[key] = value;
@@ -68,6 +72,18 @@ class FlutterIntent {
 
   bool hasData () {
     return _extras.isNotEmpty || _object != null;
+  }
+
+  Future<void> startForResult(String name,int requestCode, Function(Result result,FlutterIntent intent) onResult) async {
+    var result = await Navigator.of(context).pushNamed(name,arguments: this);
+    if(result is FlutterIntent) {
+      onResult(result._result,result);
+    }
+  }
+
+  void setResultAndFinish(Result result) {
+    _result = result;
+    Navigator.of(context).pop(this);
   }
 
   /// Force overlay the bottom navigation bar
