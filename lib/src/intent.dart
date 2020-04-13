@@ -73,10 +73,10 @@ class FlutterIntent {
     return _extras.isNotEmpty || _object != null;
   }
 
-  Future<void> startForResult(Function(Result result,FlutterIntent intent) onResult) async {
+  Future<void> startForResult(Function(Result result,FlutterIntent intent, int requestCode) onResult, int requestCode) async {
     var intentData = await Navigator.of(context).pushNamed(name,arguments: this);
     if(intentData is FlutterIntent) {
-      onResult(result,intentData);
+      onResult(result,intentData,requestCode);
     }
   }
 
@@ -95,13 +95,19 @@ class FlutterIntent {
 }
 
 class FlutterIntentService {
+  
   FlutterIntentService({
     this.onIntent
   });
 
   /// Converts the onGenerateSettings data to a FlutterIntent structure
-  static Route<dynamic> convertToIntentService(RouteSettings settings,Widget Function(FlutterIntent intent) builder, {bool iOSPageRoute = false}) {
-   return iOSPageRoute ? CupertinoPageRoute(builder: (_) => builder(settings.arguments)) : MaterialPageRoute(builder: (_) => builder(settings.arguments));
+  static Route<dynamic> fromRouteSettings(RouteSettings settings,Widget Function(FlutterIntent intent) builder, {bool iOSPageRoute = false}) {
+    if(settings.arguments is FlutterIntent) {
+      return iOSPageRoute ? CupertinoPageRoute(builder: (_) => builder(settings.arguments)) : MaterialPageRoute(builder: (_) => builder(settings.arguments));
+    }
+    else {
+      throw Exception("Settings argument attribute is not type of FlutterIntent!");
+    }
   }
 
   Widget Function(FlutterIntent intent) onIntent;
