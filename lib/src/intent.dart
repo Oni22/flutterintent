@@ -95,7 +95,7 @@ class FlutterIntent {
 }
 
 class FlutterIntentService {
-  
+
   FlutterIntentService({
     this.onIntent
   });

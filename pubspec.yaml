@@ -1,8 +1,8 @@
 name: flutterintent
-description: A new Flutter package project.
-version: 0.0.1
-author:
-homepage:
+description: A navigation Wrapper for the Flutter navigation system
+version: 1.0.0
+author: Onur Oezkan
+homepage: https://www.onurozkan.net/
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
