@@ -55,7 +55,8 @@ This plugin required the usage of the onGenerateRoute attribute of the MaterialA
 ```
 
 ***Start a widget for getting a result***
-If you want to get a result back from a widget when it's closed you can use startForResult():
+
+If you want to get a result back from a closing widget you can use startForResult():
 ```dart
 //Page 1
 FlutterIntent(context: context,name: "/page2")
@@ -64,7 +65,6 @@ FlutterIntent(context: context,name: "/page2")
         print(intent.getStringExtra("hello_world"))
     }
 })
-..
 ```
 Set Result and send data back to previous widget:
 
@@ -73,5 +73,4 @@ Set Result and send data back to previous widget:
 FlutterIntent.setResult(context: context,result: Result.ok)
 ..putExtra("hello_world","Hello World")
 ..finish()
-..
 ```
